@@ -1,0 +1,270 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: "egr.gov.by"
+  description: Schema for egrn queries
+  license:
+    name: MIT
+host: egr.gov.by
+basePath: /egrn
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+- text/html
+paths:
+  /API.jsp:
+    x-summary: Legal Entity Main Data
+    get:
+      summary: Returns main entity data
+      parameters:
+        - in: query
+          name: TP
+          type: integer
+          minimum: 1
+          maximum: 2
+          description: тип субъекта хозяйствования (1 - юридическое лицо, 2 - индивидуальный предприниматель). Параметр необязательный.
+        - in: query
+          name: NM
+          type: integer
+          description: регистрационный номер субъекта хозяйствования. Параметр необязательный.
+        - in: query
+          name: PK
+          type: integer
+          description: первичный ключ субъекта хозяйствования. Параметр необязательный.
+        - in: query
+          name: NS
+          type: integer
+          description: текущее состояние субъекта хозяйствования. Параметр необязательный.
+        - in: query
+          name: VNM
+          type: string
+          description: часть наименования субъекта хозяйствования на русском языке. Параметр необязательный.
+        - in: query
+          name: VNMB
+          type: string
+          description: часть наименования субъекта хозяйствования на белорусском языке. Параметр необязательный.
+        - in: query
+          name: ACT
+          type: string
+          description: признак активности записи ("+" - последнее состояние, "-" - история, "A" - вывод всей информации. По умолчанию - "A"). Параметр необязательный.
+        - in: query
+          name: MSK
+          type: string
+          description: маска вывода полей (строка из 17 символов "0" или "1". По умолчанию - 11111111111111111). Параметр необязательный.
+        - in: query
+          name: RSTART
+          type: integer
+          description: первый регистрационный номер. Параметр необязательный.
+        - in: query
+          name: REND
+          type: integer
+          description: последний регистрационный номер. Параметр необязательный.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+          examples:
+            application/json: 
+                [
+                  {
+                    "TP": 1,
+                    "NM": 100059271,
+                    "DC": "25.08.1992",
+                    "DD": {},
+                    "NU": 501,
+                    "VU": "Минский городской исполнительный комитет",
+                    "NS": 1,
+                    "VS": "Действующий",
+                    "VNM": "Научно-инженерное республиканское унитарное предприятие \"ИНСТИТУТ ПРИКЛАДНЫХ ПРОГРАММНЫХ СИСТЕМ\"",
+                    "VSN": "НИРУП \"ИППС\"",
+                    "VFN": "ИНСТИТУТ ПРИКЛАДНЫХ ПРОГРАММНЫХ СИСТЕМ",
+                    "ACT": true,
+                    "Z": false,
+                    "VNMB": "Навукова-iнжынернае рэспублiканскае унiтарнае прадпрыемства \"IНСТЫТУТ ПРЫКЛАДНЫХ ПРАГРАМНЫХ СIСТЭМ\"",
+                    "VSNB": "НIРУП \"IППС\"",
+                    "VFNB": "IНСТЫТУТ ПРЫКЛАДНЫХ ПРАГРАМНЫХ СIСТЭМ"
+                  }
+                ]
+  /APIEV.jsp:
+    x-summary: Legal Entity Event Data
+    get:
+        summary: Returns list of events related to the entities
+        parameters:
+          - in: query
+            name: NM
+            type: integer
+            required: true
+            description: регистрационный номер субъекта хозяйствования. Параметр необязательный.
+          - in: query  
+            name: PK
+            type: integer
+            required: false
+            description: первичный ключ субъекта хозяйствования. Параметр необязательный.
+          - in: query
+            name: RSTART
+            type: integer
+            required: false
+            description: первый регистрационный номер. Параметр необязательный.
+          - in: query
+            name: REND
+            type: integer
+            required: false
+            description: последний регистрационный номер. Параметр необязательный.
+        responses:
+          200:
+            description: OK
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/EntityEvent'
+            examples:
+              application/json:
+                [
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "11.10.2007",
+                    "EV": "Государственная регистрация изменений и дополнений для юридического лица"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "05.08.2013",
+                    "EV": "Уведомление о назначении (замене) руководителя"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "03.04.2003",
+                    "EV": "Государственная регистрация изменений и дополнений для юридического лица"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "25.08.1992",
+                    "EV": "Государственная регистрация создаваемого юридического лица"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "31.12.1996",
+                    "EV": "Перерегистрация юридического лица в соответствии с законодательными актами"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "14.06.2000",
+                    "EV": "Перерегистрация юридического лица в соответствии с законодательными актами"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "19.03.2002",
+                    "EV": "Государственная регистрация изменений и дополнений для юридического лица"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "29.07.2005",
+                    "EV": "Государственная регистрация изменений и дополнений для юридического лица"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "18.05.2006",
+                    "EV": "Государственная регистрация изменений и дополнений для юридического лица"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "20.05.2010",
+                    "EV": "Уведомление об изменении местонахождения"
+                  },
+                  {
+                    "PK": 20319997,
+                    "NM": 100059271,
+                    "DT": "05.09.2012",
+                    "EV": "Уведомление о назначении (замене) руководителя"
+                  }
+                ] 
+definitions:
+  Entity:
+    title: Legal Entity
+    type: object
+    properties:
+      TP:
+        type: integer
+        minimum: 1
+        maximum: 2
+        description: тип субъекта хозяйствования (1 - юридическое лицо, 2 - индивидуальный предприниматель)
+      NM:
+        type: integer
+        description: регистрационный номер субъекта хозяйствования.
+      DC:
+        type: string
+        description: дата регистрации субъекта хозяйствования.
+      DD:
+        type: string
+        description: дата исключения из ЕГР (прекращения деятельности в связи с реорганизацией) субъекта хозяйствования.
+      NU:
+        type: integer
+        description: код текущего органа учета субъекта хозяйствования.
+      VU:
+        type: string
+        description: наименование текущего органа учета субъекта хозяйствования.
+      NS:
+        type: integer
+        description: код текущего состояния субъекта хозяйствования.
+      VS:
+        type: string
+        description: наименование текущего состояния субъекта хозяйствования.
+      VNM:
+        type: string
+        description: полное наименование юридического лица/ФИО индивидуального предпринимателя на русском языке.
+      VSN:
+        type: string
+        description: сокращенное наименование юридического лица на русском языке.
+      VFN:
+        type: string
+        description: фирменное наименование юридического лица на русском языке.
+      ACT:
+        type: integer
+        description: признак активности записи.
+      Z:
+        type: integer
+        description: наличие запрета на отчуждение доли участника в уставном фонде коммерческой организации.
+      VNMB:
+        type: string
+        description: полное наименование юридического лица на белорусском языке.
+      VSNB:
+        type: string
+        description: сокращенное наименование юридического лица на белорусском языке.
+      VFNB: 
+        type: string
+        description: фирменное наименование юридического лица на белорусском языке.
+      PK:
+        type: integer
+        description: первичный ключ субъекта хозяйствования.
+
+  EntityEvent:
+    title: Legal Entity Event
+    type: object
+    properties:
+      PK:
+        type: integer
+        description: первичный ключ субъекта хозяйствования.
+      NM:
+        type: integer
+        description: регистрационный номер субъекта хозяйствования.
+      DT:
+        type: integer
+        description: дата события.
+      EV:
+        type: string
+        description: наименование события.
